@@ -1,21 +1,23 @@
 package it.unifi.ing.pc.parser;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class GoogleImageParser implements Parser {
 
 	@Override
-	public Set<String> parse(Document doc) {
-		Elements elems = doc.select(".rg_di > .rg_meta");
+	public Set<String> parse(HtmlPage page) {
+		List<?> imgs = page.getByXPath("//div[@class='rg_meta']");
 		Set<String> result = new HashSet<>();
-		for(Element elem : elems) {
-			String imgUrl = StringUtils.getNestedString(elem.html().trim(), "\"ou\":\"", "\",\"ow\"");
+		for(Object img : imgs) {
+			String imgUrl = StringUtils.getNestedString((
+					(HtmlDivision)img).getTextContent().toString().trim(), "\"ou\":\"", "\",\"ow\"");
 			if(imgUrl != null && !imgUrl.trim().isEmpty()) {
 				result.add( imgUrl.trim() );
 			}
