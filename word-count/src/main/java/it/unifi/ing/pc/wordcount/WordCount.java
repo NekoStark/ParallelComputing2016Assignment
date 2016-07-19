@@ -1,5 +1,7 @@
 package it.unifi.ing.pc.wordcount;
 
+import static it.unifi.ing.pc.utilities.ResourceLoader.asURI;
+
 import java.io.File;
 
 import org.apache.hadoop.conf.Configuration;
@@ -12,7 +14,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
 
-	private static final String INPUT_FILE = "/input/lorem.txt";
 	private static final String OUTPUT_DIR = "src/main/resources/out";
 	
 	public static void main(String[] args) throws Exception {
@@ -31,10 +32,8 @@ public class WordCount {
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(IntWritable.class);
 	    
-	    FileInputFormat.addInputPath(job, new Path(
-	    		WordCount.class.getResource("/input/lorem1.txt").toURI()));
-	    FileInputFormat.addInputPath(job, new Path(
-	    		WordCount.class.getResource("/input/lorem2.txt").toURI()));
+	    FileInputFormat.addInputPath(job, new Path( asURI("/input/lorem1.txt") ));
+	    FileInputFormat.addInputPath(job, new Path( asURI("/input/lorem2.txt") ));
 	    FileOutputFormat.setOutputPath(job, new Path(OUTPUT_DIR));
 	    
 	    System.exit(job.waitForCompletion(true) ? 0 : 1);
