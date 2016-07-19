@@ -32,7 +32,9 @@ public class WordCount {
 	    job.setOutputValueClass(IntWritable.class);
 	    
 	    FileInputFormat.addInputPath(job, new Path(
-	    		WordCount.class.getResource(INPUT_FILE).toURI()));
+	    		WordCount.class.getResource("/input/lorem1.txt").toURI()));
+	    FileInputFormat.addInputPath(job, new Path(
+	    		WordCount.class.getResource("/input/lorem2.txt").toURI()));
 	    FileOutputFormat.setOutputPath(job, new Path(OUTPUT_DIR));
 	    
 	    System.exit(job.waitForCompletion(true) ? 0 : 1);
