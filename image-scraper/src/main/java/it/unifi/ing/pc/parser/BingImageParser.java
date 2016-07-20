@@ -7,7 +7,6 @@ import java.util.Set;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class BingImageParser implements Parser {

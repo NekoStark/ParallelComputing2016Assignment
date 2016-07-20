@@ -18,6 +18,7 @@ public class ScraperTestBing {
 		Set<String> result = new Scraper(Service.BING, new BingImageParser()).query("pippo");
 		for(String s : result) {
 			System.out.println(s);
+			Scraper.saveImage(s);
 		}
 		System.out.println("Result size: " + result.size());
 	}
