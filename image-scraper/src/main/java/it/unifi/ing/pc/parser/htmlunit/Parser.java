@@ -1,4 +1,4 @@
-package it.unifi.ing.pc.parser;
+package it.unifi.ing.pc.parser.htmlunit;
 
 import java.util.Set;
 

@@ -15,21 +15,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Searcher {
+public class FlickrSearcher {
 
-	public Set<String> search(String term) {
-		Set<String> result = new HashSet<>();
-		
-		result.addAll( new FlickrSearcher().search( term ) );
-//		result.addAll( new Scraper(Service.GOOGLE, new GoogleImageParser()).query(term) );
-//		result.addAll( new Scraper(Service.BING, new BingImageParser()).query(term) );
-		
-		return result;
-	}
-	
-}
-
-class FlickrSearcher {
 	Properties p = PropertyLoader.asProperties("/flickr-api.properties");
 	
 	public Set<String> search(String term) {
@@ -70,4 +57,5 @@ class FlickrSearcher {
 		
 		return sb.toString();
 	}
+	
 }

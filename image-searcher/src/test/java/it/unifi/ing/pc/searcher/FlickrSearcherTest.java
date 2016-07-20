@@ -4,11 +4,11 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class SearcherTest {
+public class FlickrSearcherTest {
 
 	@Test
 	public void test() {
-		Set<String> result = new Searcher().search("pippo");
+		Set<String> result = new FlickrSearcher().search("pippo");
 		System.out.println(result.size());
 
 	}
