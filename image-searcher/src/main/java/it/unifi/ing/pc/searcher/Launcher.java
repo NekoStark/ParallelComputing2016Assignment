@@ -34,7 +34,7 @@ public class Launcher {
 		Set<String> result = new HashSet<>();
 		new HtmlUnitScraper(Service.GOOGLE, new GoogleImageParser())
 			.query(term)
-			.forEach(s -> result.add( term+","+s+",GOOGLE" ));
+			.forEach(s -> result.add( s+"\t"+term+"\tGOOGLE" ));
 
 		return result;
 	}
@@ -43,7 +43,7 @@ public class Launcher {
 		Set<String> result = new HashSet<>();
 		new HtmlUnitScraper(Service.BING, new BingImageParser())
 			.query(term)
-			.forEach(s -> result.add( term+","+s+",BING" ));
+			.forEach(s -> result.add( s+"\t"+term+"\tBING" ));
 
 		return result;
 	}
@@ -52,7 +52,7 @@ public class Launcher {
 		Set<String> result = new HashSet<>();
 		new FlickrSearcher()
 			.search(term)
-			.forEach(s -> result.add( term+","+s+",FLICKR" ));
+			.forEach(s -> result.add( s+"\t"+term+"\tFLICKR" ));
 
 		return result;
 	}
