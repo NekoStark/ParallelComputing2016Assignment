@@ -14,7 +14,7 @@ import it.unifi.ing.pc.service.Service;
 public class ScraperTestGoogle {
 	@Test
 	public void test() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
-		Set<String> result = new Scraper(Service.GOOGLE, new GoogleImageParser()).query("pippo");
+		Set<String> result = new HtmlUnitScraper(Service.GOOGLE, new GoogleImageParser()).query("pippo");
 		for(String s : result) {
 			System.out.println(s);
 		}

@@ -15,10 +15,10 @@ public class ScraperTestBing {
 
 	@Test
 	public void test() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
-		Set<String> result = new Scraper(Service.BING, new BingImageParser()).query("pippo");
+		Set<String> result = new HtmlUnitScraper(Service.BING, new BingImageParser()).query("pippo");
 		for(String s : result) {
 			System.out.println(s);
-			Scraper.saveImage(s);
+			HtmlUnitScraper.saveImage(s);
 		}
 		System.out.println("Result size: " + result.size());
 	}
