@@ -11,7 +11,7 @@ public class ScraperTest {
 
 	@Test
 	public void test() {
-		Set<String> result = new Scraper(Service.GOOGLE, new GoogleImageParser()).query("pippo");
+		Set<String> result = new HtmlUnitScraper(Service.GOOGLE, new GoogleImageParser()).query("pippo");
 		System.out.println(result.size());
 //		for(String s : result) {
 //			System.out.println(s);
