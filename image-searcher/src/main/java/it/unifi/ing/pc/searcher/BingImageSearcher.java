@@ -26,6 +26,8 @@ public class BingImageSearcher extends Searcher {
 				.append(term)
 				.append("&count=")
 				.append(PAGE_SIZE)
+				.append("&freshness=")
+				.append(getProperty("service.freshness"))
 				.append("&offset=")
 				.append(page*PAGE_SIZE)
 				.toString();
