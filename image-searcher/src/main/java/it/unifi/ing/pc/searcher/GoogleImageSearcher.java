@@ -25,15 +25,16 @@ public class GoogleImageSearcher extends Searcher {
 				.append(getProperty("service.cx"))
 				.append("&searchType=")
 				.append(getProperty("service.type"))
-				.append("&dateRestrict")
+				.append("&dateRestrict=")
 				.append(getProperty("service.dateRestrict"))
-				.append("&safe")
-				.append(getProperty("service.safe"))
+				.append("&safe=")
 				.append(getProperty("service.safe"))
 				.append("&q=")
 				.append(term)
 				.append("&start=")
 				.append(PAGE_SIZE*page + 1)
+				.append("&sort=")
+				.append(getProperty("service.sort"))
 				.toString();
 	}
 
