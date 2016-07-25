@@ -15,6 +15,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+//TODO fare classe che estende Searcher
+@Deprecated
 public class FlickrSearcher {
 
 	Properties p = PropertyLoader.asProperties("/flickr-api.properties");
