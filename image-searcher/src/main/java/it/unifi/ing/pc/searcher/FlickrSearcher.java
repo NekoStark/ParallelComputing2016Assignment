@@ -55,12 +55,33 @@ public class FlickrSearcher extends Searcher {
 	Set<String> parseResult(String responseBody) {
 		Set<String> result = new HashSet<>();
 		JsonArray photos = new JsonParser().parse(responseBody)
-						.getAsJsonObject().getAsJsonArray("photos");
+						.getAsJsonObject().getAsJsonObject("photos")
+						.getAsJsonArray("photo");
+		
 		for (JsonElement photo : photos) {
-			result.add( photo.getAsJsonObject().get("photo").getAsString() );
+			result.add( buildImageUrl( string(photo, "farm"), string(photo, "server"),
+					string(photo, "id"), string(photo, "secret") ) );
 		}
 		
 		return result;
+	}
+	
+	private String string(JsonElement elem, String property) {
+		return elem.getAsJsonObject().get(property).getAsString();
+	}
+	
+	private String buildImageUrl(String farmId, String serverId, 
+			String imageId, String secret) {
+		StringBuffer sb = new StringBuffer();
+		return sb.append("https://farm")
+				.append(farmId)
+				.append(".staticflickr.com/")
+				.append(serverId)
+				.append("/")
+				.append(imageId)
+				.append("_")
+				.append(secret)
+				.append(".jpg").toString();
 	}
 
 }
