@@ -27,7 +27,7 @@ public class Launcher {
 //			writeToFile(path, term, searchFlickr(term));
 			
 		}
-
+		
 	}
 	
 	private static Set<String> searchGoogle(String term) {
