@@ -1,63 +1,66 @@
 package it.unifi.ing.pc.searcher;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import it.unifi.ing.pc.utilities.PropertyLoader;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
-//TODO fare classe che estende Searcher
-@Deprecated
-public class FlickrSearcher {
+public class FlickrSearcher extends Searcher {
 
-	Properties p = PropertyLoader.asProperties("/flickr-api.properties");
-	
-	public Set<String> search(String term) {
-		Set<String> result = new HashSet<>();
-		OkHttpClient client = new OkHttpClient();
-		
-		Request request = new Request.Builder()
-				.url( buildRequestUrl() )
-				.build();
-
-		try (Response response = client.newCall(request).execute()) {
-			JsonObject photos = new JsonParser().parse(response.body().string()).getAsJsonObject()
-					.getAsJsonObject("photos");
-			JsonArray photoArray = photos.getAsJsonArray("photo");
-			for (JsonElement photo : photoArray) {
-				//FIXME da finire!
-				result.add( photo.toString() );
-			}
-			
-			return result;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	private String buildRequestUrl() {
+	private String buildRequestUrl(String term, int page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(p.getProperty("service.url"));
-		sb.append("?method=");
-		sb.append(p.getProperty("service.method"));
-		sb.append("&api_key=");
-		sb.append(p.getProperty("service.apikey"));
-		sb.append("&api_sig=");
-		sb.append(p.getProperty("service.apisig"));
-		sb.append("&format=json&nojsoncallback=1");
-		sb.append("&text=");
-		sb.append("pippo");
 		
-		return sb.toString();
+		//FIXME timestamp
+//		String date = LocalDateTime.now()
+//				.format( DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") );
+		
+		return sb.append(getProperty("service.url"))
+			.append("?method=")
+			.append(getProperty("service.method"))
+			.append("&api_key=")
+			.append(getProperty("service.apikey"))
+			.append("&api_sig=")
+			.append(getProperty("service.apisig"))
+			.append("&text=")
+			.append(term)
+			.append("&page=")
+			.append(page)
+			.append("&extras=")
+			.append(getProperty("service.extras"))
+//			.append("&min_upload_date=")
+//			.append(date)
+			.append("&format=json&nojsoncallback=1")
+			.toString();
 	}
 	
+	@Override
+	Properties initProperties() {
+		return PropertyLoader.asProperties("/flickr-api.properties");
+	}
+
+	@Override
+	Request buildRequest(String term, int page) {
+		return new Request.Builder()
+				.url( buildRequestUrl(term, page) )
+				.build();
+	}
+
+	@Override
+	Set<String> parseResult(String responseBody) {
+		Set<String> result = new HashSet<>();
+		JsonArray photos = new JsonParser().parse(responseBody)
+						.getAsJsonObject().getAsJsonArray("photos");
+		for (JsonElement photo : photos) {
+			result.add( photo.getAsJsonObject().get("photo").getAsString() );
+		}
+		
+		return result;
+	}
+
 }
