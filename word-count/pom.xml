@@ -11,7 +11,31 @@
 			<artifactId>hadoop-core</artifactId>
 			<version>1.2.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>elephantdb</groupId>
+			<artifactId>elephantdb-bdb</artifactId>
+			<version>0.4.5</version>
+		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>elephantdb</groupId> -->
+<!-- 			<artifactId>elephantdb-cascading</artifactId> -->
+<!-- 			<version>0.4.5</version> -->
+<!-- 		</dependency> -->
 		
+		<dependency>
+			<groupId>elephantdb</groupId>
+			<artifactId>elephantdb-cascalog</artifactId>
+			<version>0.4.5</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>cascalog</groupId>
+			<artifactId>cascalog</artifactId>
+			<version>1.10.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>it.unifi.ing.parallel</groupId>
 			<artifactId>utilities</artifactId>
@@ -32,4 +56,12 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>clojars.org</id>
+			<url>http://clojars.org/repo</url>
+		</repository>
+	</repositories>
+
 </project>
