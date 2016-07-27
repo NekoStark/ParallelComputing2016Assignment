@@ -1,5 +1,7 @@
 package it.unifi.ing.pc.searcher;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -13,6 +15,7 @@ import okhttp3.Request;
 
 public class GoogleImageSearcher extends Searcher {
 
+	private static final String SERVICE_NAME = "GOOGLE"; 
 	private static final int PAGE_SIZE = 10;
 	
 	private String buildRequestUrl(String term, int page) {
@@ -51,12 +54,15 @@ public class GoogleImageSearcher extends Searcher {
 	}
 
 	@Override
-	Set<String> parseResult(String responseBody) {
-		Set<String> result = new HashSet<>();
+	Set<Result> parseResult(String responseBody) {
+		Set<Result> result = new HashSet<>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
 		JsonArray photos = new JsonParser().parse(responseBody)
 						.getAsJsonObject().getAsJsonArray("items");
 		for (JsonElement photo : photos) {
-			result.add( photo.getAsJsonObject().get("link").getAsString() );
+			result.add( new Result(
+					photo.getAsJsonObject().get("link").getAsString(),
+					SERVICE_NAME, LocalDateTime.now().format(formatter)) );
 		}
 		
 		return result;

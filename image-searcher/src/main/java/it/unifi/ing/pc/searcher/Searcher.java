@@ -13,13 +13,13 @@ public abstract class Searcher {
 
 	private Properties properties;
 	
-	public final Set<String> search(String term) {
+	public final Set<Result> search(String term) {
 		return search(term, 1);
 	}
 	
-	public final Set<String> search(String term, int pages) {
+	public final Set<Result> search(String term, int pages) {
 		OkHttpClient client = new OkHttpClient();
-		Set<String> results = new HashSet<>();
+		Set<Result> results = new HashSet<>();
 		
 		for (int i = 0; i < pages; i++) {
 			Request request = buildRequest(term, i);
@@ -53,6 +53,6 @@ public abstract class Searcher {
 	
 	abstract Properties initProperties();
 	abstract Request buildRequest(String term, int page);
-	abstract Set<String> parseResult(String responseBody);
+	abstract Set<Result> parseResult(String responseBody);
 	
 }

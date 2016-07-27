@@ -13,6 +13,8 @@ import okhttp3.Request;
 
 public class FlickrSearcher extends Searcher {
 
+	private static final String SERVICE_NAME = "FLICKR"; 
+	
 	private String buildRequestUrl(String term, int page) {
 		StringBuffer sb = new StringBuffer();
 		
@@ -52,15 +54,17 @@ public class FlickrSearcher extends Searcher {
 	}
 
 	@Override
-	Set<String> parseResult(String responseBody) {
-		Set<String> result = new HashSet<>();
+	Set<Result> parseResult(String responseBody) {
+		Set<Result> result = new HashSet<>();
 		JsonArray photos = new JsonParser().parse(responseBody)
 						.getAsJsonObject().getAsJsonObject("photos")
 						.getAsJsonArray("photo");
 		
 		for (JsonElement photo : photos) {
-			result.add( buildImageUrl( string(photo, "farm"), string(photo, "server"),
-					string(photo, "id"), string(photo, "secret") ) );
+			String imageUrl = buildImageUrl( string(photo, "farm"), string(photo, "server"),
+					string(photo, "id"), string(photo, "secret") );
+			
+			result.add( new Result(imageUrl, SERVICE_NAME, string(photo, "date_upload")) );
 		}
 		
 		return result;

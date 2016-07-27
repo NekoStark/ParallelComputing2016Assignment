@@ -13,9 +13,9 @@ import okhttp3.Request;
 
 public class BingImageSearcher extends Searcher {
 
+	private static final String SERVICE_NAME = "BING";
 	private static final int PAGE_SIZE = 100;
 	
-	//TODO filtrare per giorno
 	private String buildRequestUrl(String term, int page) {
 		StringBuffer sb = new StringBuffer();
 		
@@ -47,12 +47,14 @@ public class BingImageSearcher extends Searcher {
 	}
 
 	@Override
-	Set<String> parseResult(String responseBody) {
-		Set<String> result = new HashSet<>();
+	Set<Result> parseResult(String responseBody) {
+		Set<Result> result = new HashSet<>();
 		JsonArray photos = new JsonParser().parse(responseBody)
 						.getAsJsonObject().getAsJsonArray("value");
 		for (JsonElement photo : photos) {
-			result.add( photo.getAsJsonObject().get("contentUrl").getAsString() );
+			result.add( 
+				new Result( photo.getAsJsonObject().get("contentUrl").getAsString(),
+						SERVICE_NAME, photo.getAsJsonObject().get("datePublished").getAsString() ) );
 		}
 		
 		return result;
