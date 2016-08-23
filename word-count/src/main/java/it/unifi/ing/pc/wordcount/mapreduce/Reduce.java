@@ -1,4 +1,4 @@
-package it.unifi.ing.pc.wordcount;
+package it.unifi.ing.pc.wordcount.mapreduce;
 
 import java.io.IOException;
 
