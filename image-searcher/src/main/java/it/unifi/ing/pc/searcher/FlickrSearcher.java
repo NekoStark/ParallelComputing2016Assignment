@@ -1,5 +1,9 @@
 package it.unifi.ing.pc.searcher;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -14,29 +18,39 @@ import okhttp3.Request;
 public class FlickrSearcher extends Searcher {
 
 	private static final String SERVICE_NAME = "FLICKR"; 
+	private LocalDateTime restrictDateTime;
+	
+	public FlickrSearcher() {
+		super();
+	}
+	public FlickrSearcher(LocalDateTime restrictDateTime) {
+		super();
+		this.restrictDateTime = restrictDateTime;
+	}
 	
 	private String buildRequestUrl(String term, int page) {
 		StringBuffer sb = new StringBuffer();
 		
-		//FIXME timestamp
-//		String date = LocalDateTime.now()
-//				.format( DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") );
-		
-		return sb.append(getProperty("service.url"))
+		sb.append(getProperty("service.url"))
 			.append("?method=")
 			.append(getProperty("service.method"))
 			.append("&api_key=")
 			.append(getProperty("service.apikey"))
-			.append("&api_sig=")
-			.append(getProperty("service.apisig"))
 			.append("&text=")
 			.append(term)
 			.append("&page=")
 			.append(page)
 			.append("&extras=")
-			.append(getProperty("service.extras"))
-//			.append("&min_upload_date=")
-//			.append(date)
+			.append(getProperty("service.extras"));
+
+		if(restrictDateTime != null) {
+			sb.append("&min_upload_date=")
+			.append(restrictDateTime.format( 
+					DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ));
+			
+		}
+		
+		return sb
 			.append("&format=json&nojsoncallback=1")
 			.toString();
 	}
@@ -55,16 +69,26 @@ public class FlickrSearcher extends Searcher {
 
 	@Override
 	Set<Result> parseResult(String responseBody) {
+		//FIXME catch errore!
 		Set<Result> result = new HashSet<>();
 		JsonArray photos = new JsonParser().parse(responseBody)
 						.getAsJsonObject().getAsJsonObject("photos")
 						.getAsJsonArray("photo");
 		
 		for (JsonElement photo : photos) {
-			String imageUrl = buildImageUrl( string(photo, "farm"), string(photo, "server"),
-					string(photo, "id"), string(photo, "secret") );
+			try {
+				String imageUrl = buildImageUrl( string(photo, "farm"), string(photo, "server"),
+						string(photo, "id"), string(photo, "secret") );
+				
+				LocalDateTime dateUpload =
+					    Instant.ofEpochSecond( Long.valueOf( string(photo, "dateupload")) )
+								.atZone(ZoneId.systemDefault()).toLocalDateTime();
+				
+				result.add( new Result(imageUrl, SERVICE_NAME, dateUpload.toString()) );
 			
-			result.add( new Result(imageUrl, SERVICE_NAME, string(photo, "date_upload")) );
+			} catch(RuntimeException e){
+				System.out.println("could not parse: " + photo);
+			}
 		}
 		
 		return result;

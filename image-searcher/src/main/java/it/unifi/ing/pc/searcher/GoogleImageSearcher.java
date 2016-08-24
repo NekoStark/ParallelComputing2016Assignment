@@ -1,10 +1,11 @@
 package it.unifi.ing.pc.searcher;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,27 +19,41 @@ public class GoogleImageSearcher extends Searcher {
 	private static final String SERVICE_NAME = "GOOGLE"; 
 	private static final int PAGE_SIZE = 10;
 	
+	private String freshness;
+	
+	public GoogleImageSearcher() {
+		super();
+	}
+	public GoogleImageSearcher(ImageFreshness freshness) {
+		super();
+		this.freshness = freshness.getGoogleCode();
+	}
+	
 	private String buildRequestUrl(String term, int page) {
 		StringBuffer sb = new StringBuffer();
 
-		return sb.append(getProperty("service.url"))
-				.append("?key=")
-				.append(getProperty("service.key"))
-				.append("&cx=")
-				.append(getProperty("service.cx"))
-				.append("&searchType=")
-				.append(getProperty("service.type"))
-				.append("&dateRestrict=")
-				.append(getProperty("service.dateRestrict"))
-				.append("&safe=")
-				.append(getProperty("service.safe"))
-				.append("&q=")
-				.append(term)
-				.append("&start=")
-				.append(PAGE_SIZE*page + 1)
-				.append("&sort=")
-				.append(getProperty("service.sort"))
-				.toString();
+		sb.append(getProperty("service.url"))
+			.append("?key=")
+			.append(getProperty("service.key"))
+			.append("&cx=")
+			.append(getProperty("service.cx"))
+			.append("&searchType=")
+			.append(getProperty("service.type"))
+			.append("&safe=")
+			.append(getProperty("service.safe"))
+			.append("&q=")
+			.append(term)
+			.append("&start=")
+			.append(PAGE_SIZE*page + 1)
+			.append("&sort=")
+			.append(getProperty("service.sort"));
+	
+		if(StringUtils.isNotEmpty(freshness)) {
+			sb.append("&dateRestrict=")
+		.		append(freshness);
+		}
+		
+		return sb.toString();
 	}
 
 	@Override
@@ -56,13 +71,12 @@ public class GoogleImageSearcher extends Searcher {
 	@Override
 	Set<Result> parseResult(String responseBody) {
 		Set<Result> result = new HashSet<>();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
 		JsonArray photos = new JsonParser().parse(responseBody)
 						.getAsJsonObject().getAsJsonArray("items");
 		for (JsonElement photo : photos) {
 			result.add( new Result(
 					photo.getAsJsonObject().get("link").getAsString(),
-					SERVICE_NAME, LocalDateTime.now().format(formatter)) );
+					SERVICE_NAME, LocalDateTime.now().toString()) );
 		}
 		
 		return result;
