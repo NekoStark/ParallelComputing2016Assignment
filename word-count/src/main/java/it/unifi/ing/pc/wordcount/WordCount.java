@@ -1,6 +1,7 @@
 package it.unifi.ing.pc.wordcount;
 
 import java.io.File;
+import java.net.URI;
 
 import org.apache.commons.io.FileUtils;
 
@@ -31,7 +32,7 @@ public class WordCount {
 //
 //		job.waitForCompletion(true);
 
-		DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
+//		DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
 		
 		DatabaseOperation.writeToStd( EndpointFactory.getEdb() );
 	}
