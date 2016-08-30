@@ -1,4 +1,4 @@
-package it.unifi.parallel.storm_images;
+package it.unifi.parallel.storm_images.bolt;
 
 import java.util.HashMap;
 import java.util.Map;

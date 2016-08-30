@@ -11,18 +11,20 @@ import backtype.storm.LocalCluster;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import backtype.storm.utils.Utils;
+import it.unifi.parallel.storm_images.bolt.ImageParser;
+import it.unifi.parallel.storm_images.bolt.ImageRecord;
+import it.unifi.parallel.storm_images.spout.ImageSpout;
 
 public class ImageTopology {
 
 	public static void main(String[] args) throws Exception {
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("image_spout", new RandomImageSpout(), 4);
+		builder.setSpout("image_spout", new ImageSpout(), 4);
 		builder.setBolt("image_parser", new ImageParser(), 4)
 				.shuffleGrouping("image_spout");
 		builder.setBolt("image_recorder", new ImageRecord(), 4)
 			.fieldsGrouping("image_parser", new Fields("searchKey", "link")); 
 
-		
 		LocalCluster cluster = new LocalCluster();
 		Config conf = new Config();
 		cluster.submitTopology("image-search", conf, builder.createTopology());

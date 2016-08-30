@@ -1,4 +1,4 @@
-package it.unifi.parallel.storm_images;
+package it.unifi.parallel.storm_images.spout;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -23,7 +23,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import it.unifi.ing.pc.searcher.*;
 
-public class RandomImageSpout extends BaseRichSpout {
+public class ImageSpout extends BaseRichSpout {
 
 	private static final long serialVersionUID = 3421415774404184763L;
 	private static final String fileLocation = "/home/tommi/Scrivania/Pippo/image.out";

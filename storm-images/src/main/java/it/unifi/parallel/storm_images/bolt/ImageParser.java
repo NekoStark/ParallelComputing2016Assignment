@@ -1,4 +1,4 @@
-package it.unifi.parallel.storm_images;
+package it.unifi.parallel.storm_images.bolt;
 
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -6,6 +6,7 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
+import it.unifi.parallel.storm_images.model.ImageResuls;
 
 public class ImageParser extends BaseBasicBolt {
 
@@ -20,7 +21,7 @@ public class ImageParser extends BaseBasicBolt {
 	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		ImageResuls image = new ImageResuls(input.getString(0));
-		collector.emit( new Values(image.searchKey, image.link));
+		collector.emit( new Values(image.getSearchKey(), image.getLink()) );
 
 	}
 
