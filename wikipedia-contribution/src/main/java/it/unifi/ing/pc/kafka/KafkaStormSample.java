@@ -3,7 +3,7 @@ package it.unifi.ing.pc.kafka;
 import java.util.UUID;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
 import storm.kafka.BrokerHosts;
@@ -33,8 +33,13 @@ public class KafkaStormSample {
 		builder.setBolt("word-spitter", new SplitBolt2()).shuffleGrouping("kafka-spout");
 		builder.setBolt("word-counter", new ImageRecord()).shuffleGrouping("word-spitter");
 
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("KafkaStormSample", config, builder.createTopology());
+//		LocalCluster cluster = new LocalCluster();
+//		cluster.submitTopology("KafkaStormSample", config, builder.createTopology());
+		
+		Config conf = new Config();
+		conf.setNumWorkers(20);
+		conf.setMaxSpoutPending(5000);
+		StormSubmitter.submitTopology("mytopology", conf, builder.createTopology());
 	}
 
 }
