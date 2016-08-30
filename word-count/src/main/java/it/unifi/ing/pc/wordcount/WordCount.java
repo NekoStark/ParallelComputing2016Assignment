@@ -3,6 +3,7 @@ package it.unifi.ing.pc.wordcount;
 import static it.unifi.ing.pc.utilities.ResourceLoader.asURI;
 
 import java.io.File;
+import java.net.URI;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -22,9 +23,17 @@ import it.unifi.ing.pc.wordcount.mapreduce.Reduce;
 public class WordCount {
 
 	public static void main(String[] args) throws Exception {
-		clearOutputFolder();
+//		clearOutputFolder();
 
 		Configuration conf = new Configuration();
+		
+		conf.set("fs.hdfs.impl", 
+		        org.apache.hadoop.hdfs.DistributedFileSystem.class.getName()
+		    );
+		conf.set("fs.file.impl",
+		        org.apache.hadoop.fs.LocalFileSystem.class.getName()
+		    );
+
 
 		Job job = Job.getInstance(conf, "word count");
 		job.setJarByClass(WordCount.class);
@@ -36,13 +45,14 @@ public class WordCount {
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 
-		FileInputFormat.addInputPath(job, new Path(asURI("/input/lorem1.txt")));
-		FileInputFormat.addInputPath(job, new Path(asURI("/input/lorem2.txt")));
-		FileOutputFormat.setOutputPath(job, new Path(Config.OUTPUT_DIR));
-
+		FileInputFormat.addInputPath(job, new Path("input/lorem1.txt"));
+//		FileInputFormat.addInputPath(job, new Path(asURI("/input/lorem2.txt")));
+//		FileOutputFormat.setOutputPath(job, new Path(Config.OUTPUT_DIR));
+//		FileOutputFormat.setOutputPath(job, new Path("output2"));
+		
 		job.waitForCompletion(true);
 
-		DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
+//		DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
 		
 		DatabaseOperation.writeToStd( EndpointFactory.getEdb() );
 	}
