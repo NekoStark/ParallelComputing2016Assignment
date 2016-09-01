@@ -29,11 +29,11 @@ public class HadoopImages {
 	    job.setOutputValueClass(Text.class);
 	    
 	    FileInputFormat.addInputPath(job, new Path( "/input/rawdata") );
-	    FileOutputFormat.setOutputPath(job, new Path("/output/" ));
+	    FileOutputFormat.setOutputPath(job, new Path("/output" ));
+	    
+	    job.waitForCompletion(true);
 	    
 	    DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
-	    
-	    System.exit(job.waitForCompletion(true) ? 0 : 1);
 	}
 
 }
