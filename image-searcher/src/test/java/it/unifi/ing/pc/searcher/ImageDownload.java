@@ -16,13 +16,13 @@ import org.junit.Test;
 //XXX
 public class ImageDownload {
 
-	private static final String[] searchTerms = {"topolino"};
+	private static final String[] searchTerms = {"topolino", "pippo", "pluto"};
 	private static final String fileLocation = "/Users/stark/Desktop/ciao/image.out";
 	
 	@Test
 	public void test() throws Exception {
 		for(String term : searchTerms) {
-			appendResults( new GoogleImageSearcher().search(term, 30), term );
+			appendResults( new GoogleImageSearcher().search(term, 10), term );
 			appendResults( new BingImageSearcher().search(term, 3), term );
 			appendResults( new FlickrSearcher().search(term, 3), term );
 		}
