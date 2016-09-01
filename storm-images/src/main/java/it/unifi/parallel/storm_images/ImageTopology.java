@@ -1,53 +1,46 @@
 package it.unifi.parallel.storm_images;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
+import java.util.UUID;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
+import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.tuple.Fields;
-import backtype.storm.utils.Utils;
-import it.unifi.parallel.storm_images.bolt.ImageParser;
 import it.unifi.parallel.storm_images.bolt.ImageRecord;
-import it.unifi.parallel.storm_images.spout.ImageSpout;
+import it.unifi.parallel.storm_images.bolt.ImageParser;
+import storm.kafka.BrokerHosts;
+import storm.kafka.KafkaSpout;
+import storm.kafka.SpoutConfig;
+import storm.kafka.StringScheme;
+import storm.kafka.ZkHosts;
 
 public class ImageTopology {
 
 	public static void main(String[] args) throws Exception {
+		Config config = new Config();
+		config.setDebug(true);
+		config.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
+		String zkConnString = "localhost:2181";
+		String topic = "test2";
+		BrokerHosts hosts = new ZkHosts(zkConnString);
+
+		SpoutConfig kafkaSpoutConfig = new SpoutConfig(hosts, topic, "/" + topic, UUID.randomUUID().toString());
+		kafkaSpoutConfig.bufferSizeBytes = 1024 * 1024 * 4;
+		kafkaSpoutConfig.fetchSizeBytes = 1024 * 1024 * 4;
+		kafkaSpoutConfig.forceFromStart = true;
+		kafkaSpoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
+
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("image_spout", new ImageSpout(), 4);
-		builder.setBolt("image_parser", new ImageParser(), 4)
-				.shuffleGrouping("image_spout");
-		builder.setBolt("image_recorder", new ImageRecord(), 4)
-			.fieldsGrouping("image_parser", new Fields("searchKey", "link")); 
+		builder.setSpout("kafka-spout", new KafkaSpout(kafkaSpoutConfig));
+		builder.setBolt("word-spitter", new ImageParser()).shuffleGrouping("kafka-spout");
+		builder.setBolt("word-counter", new ImageRecord()).shuffleGrouping("word-spitter");
 
-		LocalCluster cluster = new LocalCluster();
+//		LocalCluster cluster = new LocalCluster();
+//		cluster.submitTopology("KafkaStormSample", config, builder.createTopology());
+		
 		Config conf = new Config();
-		cluster.submitTopology("image-search", conf, builder.createTopology());
-		
-		Utils.sleep(5000);
-		
-		cluster.killTopology("image-search");
-		cluster.shutdown();
-
-		write();
+		conf.setNumWorkers(20);
+		conf.setMaxSpoutPending(5000);
+		StormSubmitter.submitTopology("image-topology", conf, builder.createTopology());
 	}
-	
-	public static void write(){
-		try(FileWriter fw = new FileWriter("/home/tommi/Scrivania/Pluto/result.out", true);
-			    BufferedWriter bw = new BufferedWriter(fw);
-			    PrintWriter out = new PrintWriter(bw)){
-			Map<String, String> images = ImageRecord.getImages();
-			for (String key : images.keySet()){
-				out.println(key + "\t" + images.get(key));
-			}
-			} catch (IOException e) {
-			    System.out.println("Impossibile scrivere sul documento");
-			}
-	}
-
 }

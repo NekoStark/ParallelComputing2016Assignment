@@ -25,9 +25,9 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>it.unifi.ing.parallel</groupId>
-			<artifactId>image-scraper</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.3.2</version>
 		</dependency>
 		
 		<dependency>

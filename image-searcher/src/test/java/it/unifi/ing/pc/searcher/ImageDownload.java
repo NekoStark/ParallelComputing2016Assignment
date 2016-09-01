@@ -17,7 +17,7 @@ import org.junit.Test;
 public class ImageDownload {
 
 	private static final String[] searchTerms = {"topolino", "pippo", "pluto"};
-	private static final String fileLocation = "/Users/stark/Desktop/ciao/image.out";
+	private static final String fileLocation = "/Users/stark/Desktop/imgs/image.out";
 	
 	@Test
 	public void test() throws Exception {
