@@ -10,7 +10,7 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-public class Searcher {
+public class ImagePublisher {
 
 	public static void main(String[] args) {
 		Properties props = new Properties();
@@ -37,7 +37,7 @@ public class Searcher {
 		
 		try {
 			String sCurrentLine;
-			br = new BufferedReader(new FileReader("/Users/stark/Desktop/ciao/image.out"));
+			br = new BufferedReader(new FileReader("/Users/stark/Desktop/imgs/image.out"));
 			while ((sCurrentLine = br.readLine()) != null) {
 				lines.add(sCurrentLine);
 			}

@@ -31,11 +31,6 @@
 		    <version>0.8.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>it.unifi.ing.parallel</groupId>
-			<artifactId>image-searcher</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.9.2</artifactId>
             <version>0.8.1.1</version>
