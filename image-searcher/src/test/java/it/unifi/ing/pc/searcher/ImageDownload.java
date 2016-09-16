@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 //XXX
@@ -19,6 +20,7 @@ public class ImageDownload {
 	private static final String[] searchTerms = {"topolino", "pippo", "pluto"};
 	private static final String fileLocation = "/Users/stark/Desktop/imgs/image.out";
 	
+	@Ignore
 	@Test
 	public void test() throws Exception {
 		for(String term : searchTerms) {
