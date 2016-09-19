@@ -3,11 +3,12 @@ package it.unifi.parallel.storm_images;
 import java.util.UUID;
 
 import backtype.storm.Config;
-import backtype.storm.StormSubmitter;
+import backtype.storm.LocalCluster;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
-import it.unifi.parallel.storm_images.bolt.ImageRecord;
+import backtype.storm.utils.Utils;
 import it.unifi.parallel.storm_images.bolt.ImageParser;
+import it.unifi.parallel.storm_images.bolt.ImageRecord;
 import storm.kafka.BrokerHosts;
 import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
@@ -32,15 +33,21 @@ public class ImageTopology {
 
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout("kafka-spout", new KafkaSpout(kafkaSpoutConfig));
-		builder.setBolt("word-spitter", new ImageParser()).shuffleGrouping("kafka-spout");
-		builder.setBolt("word-counter", new ImageRecord()).shuffleGrouping("word-spitter");
-
-//		LocalCluster cluster = new LocalCluster();
-//		cluster.submitTopology("KafkaStormSample", config, builder.createTopology());
+		builder.setBolt("image-parser", new ImageParser()).shuffleGrouping("kafka-spout");
+		builder.setBolt("image-record", new ImageRecord()).shuffleGrouping("image-parser");
 		
-		Config conf = new Config();
-		conf.setNumWorkers(20);
-		conf.setMaxSpoutPending(5000);
-		StormSubmitter.submitTopology("image-topology", conf, builder.createTopology());
+//		BeamBolt<Map<String, Object>> beamBolt = new BeamBolt<Map<String, Object>>( new ImageBeamFactory() );
+//		builder.setBolt("image-record", beamBolt).shuffleGrouping("image-parser");
+		
+		LocalCluster cluster = new LocalCluster();
+		cluster.submitTopology("image-topology", config, builder.createTopology());
+		Utils.sleep(5000);
+		
+		cluster.killTopology("image-topology");
+		cluster.shutdown();
+		
+//		config.setNumWorkers(20);
+//		config.setMaxSpoutPending(5000);
+//		StormSubmitter.submitTopology("image-topology", config, builder.createTopology());
 	}
 }

@@ -7,8 +7,6 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import it.unifi.ing.pc.images.elephantdb.DatabaseOperation;
-import it.unifi.ing.pc.images.elephantdb.EndpointFactory;
 import it.unifi.ing.pc.images.mapreduce.Map;
 import it.unifi.ing.pc.images.mapreduce.Reduce;
 
@@ -22,18 +20,21 @@ public class HadoopImages {
 	    job.setJarByClass(HadoopImages.class);
 	    
 	    job.setMapperClass(Map.class);
-	    job.setCombinerClass(Reduce.class);
 	    job.setReducerClass(Reduce.class);
 	    
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(Text.class);
 	    
-	    FileInputFormat.addInputPath(job, new Path( "/input/rawdata") );
-	    FileOutputFormat.setOutputPath(job, new Path("/output" ));
-	    
+	    if(args.length > 0 && "demo".equals( args[0] )) {
+	    	FileInputFormat.addInputPath(job, new Path( "/Users/stark/Desktop/hadoop/input/rawdata") );
+	    	FileOutputFormat.setOutputPath(job, new Path("/Users/stark/Desktop/hadoop/output" ));
+	    } else {
+	    	FileInputFormat.addInputPath(job, new Path( "/input/rawdata") );
+	    	FileOutputFormat.setOutputPath(job, new Path("/output" ));
+	    }
 	    job.waitForCompletion(true);
 	    
-	    DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
+//	    DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
 	}
 
 }
