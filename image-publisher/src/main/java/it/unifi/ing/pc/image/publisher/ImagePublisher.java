@@ -1,71 +1,67 @@
 package it.unifi.ing.pc.image.publisher;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
-import java.util.Random;
-import java.util.UUID;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+
+import it.unifi.ing.pc.image.publisher.message.file.FileUtils;
+import it.unifi.ing.pc.image.publisher.message.producer.RandomMessageProducer;
+import it.unifi.ing.pc.image.publisher.message.producer.RandomMessageProducerTsv;
+import it.unifi.ing.pc.image.publisher.message.properties.KafkaProducerProperties;
 
 
 public class ImagePublisher {
 
 	private static final String KAFKA_TOPIC = "test2";
 	private static final String[] SERVICES = {"GOOGLE", "BING", "FLICKR"};
-
+	private static final String INPUT_FILE_LOCATION = "/path/to/input/file";
+	private static final String OUTPUT_FILE_LOCATION = "/Users/stark/Desktop/hadoop/input/rawdata";
+	
 	public static void main(String[] args) {
-		Properties props = new Properties();
-		props.put("bootstrap.servers", "localhost:9092");
-		props.put("acks", "all");
-		props.put("retries", 1);
-		props.put("batch.size", 16384);
-		props.put("linger.ms", 0);
-		props.put("block.on.buffer.full", true);
-		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		
 			
 		if(args.length == 0) {
-			fromFile(props);
+			fromFile();
 		} else {
 			if("demo".equals( args[0] )){
-				demoMode(props, Arrays.copyOfRange(args, 1, args.length));
+				demoMode(Integer.valueOf(args[1]), Integer.valueOf(args[2]), Arrays.copyOfRange(args, 3, args.length));
 			}
 			if("online".equals( args[0] )) {
-				
+				//TODO implement
 			}
 		}
 		
 	}
 	
-	private static void fromFile(Properties props) {
+	private static void fromFile() {
 		System.out.println("reading from file");
-		try(KafkaProducer<String, String> producer = new KafkaProducer<>(props)){
-			for(String s : getLines()) {
+		try(KafkaProducer<String, String> producer = new KafkaProducer<>(KafkaProducerProperties.PROPERTIES)){
+			for(String s : new FileUtils(INPUT_FILE_LOCATION).read()) {
 				producer.send(new ProducerRecord<String,String>(KAFKA_TOPIC, s));
 			}
 		}
 	}
 	
-	private static void demoMode(Properties props, String[] tags) {
+	private static void demoMode(Integer iterations, Integer sleep, String[] tags) {
 		System.out.println("demo mode");
-		try(KafkaProducer<String, String> producer = new KafkaProducer<>(props)){
+		FileUtils fileUtils = new FileUtils(OUTPUT_FILE_LOCATION);
+		try(KafkaProducer<String, String> producer = new KafkaProducer<>(KafkaProducerProperties.PROPERTIES)){
 			while(true) {
-				for(int i=0; i<10; i++) {
-					producer.send(
-						new ProducerRecord<String,String>(KAFKA_TOPIC, 
-								buildRandomMessage(random(tags), random(SERVICES) )));
+				List<String> messages = new ArrayList<>(iterations);
+				RandomMessageProducer randomMessage = new RandomMessageProducerTsv(SERVICES, tags);
+				for(int i=0; i<iterations; i++) {
+					String message = randomMessage.buildRandomMessage();
+					messages.add(message);
+					producer.send( new ProducerRecord<String,String>(KAFKA_TOPIC, message) );
 				}
+				fileUtils.append(messages);
 				
 				try {
-					System.out.println("published 1000 messages");
-					Thread.sleep(30000);
+					System.out.println("published "+iterations+" messages");
+					Thread.sleep(sleep);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -73,59 +69,7 @@ public class ImagePublisher {
 		}
 	}
 	
-	private static String buildRandomMessage(String tag, String service) {
-		StringBuffer sb = new StringBuffer();
-		return sb.append("http://")
-			.append(UUID.randomUUID().toString())
-			.append(".com")
-			.append("\t")
-			.append(tag)
-			.append("\t")
-			.append(service)
-			.append("\t")
-			.append(LocalDateTime.now())
-			.toString();
-	}
 	
-//	private static String buildRandomMessage(String tag, String service) {
-//		StringBuffer sb = new StringBuffer();
-//		return sb.append("{\"url\":\"http://")
-//			.append(UUID.randomUUID().toString())
-//			.append(".com\"")
-//			.append(",\"tag\": \"")
-//			.append(tag)
-//			.append("\",\"service\":\"")
-//			.append(service)
-//			.append("\",\"timestamp\" : \"")
-//			.append(LocalDateTime.now( ZoneId.of("UTC") ))
-//			.append("\"}")
-//			.toString();
-//	}
 	
-	private static List<String> getLines(){
-		BufferedReader br = null;
-		List<String> lines = new ArrayList<String>();
-		
-		try {
-			String sCurrentLine;
-			br = new BufferedReader(new FileReader("/Users/stark/Desktop/imgs/image.out"));
-			while ((sCurrentLine = br.readLine()) != null) {
-				lines.add(sCurrentLine);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null)br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		return lines;
-	}
-	
-	private static String random(String[] pool) {
-		return pool[ new Random().nextInt(1000) % pool.length ];
-	}
 }
 	

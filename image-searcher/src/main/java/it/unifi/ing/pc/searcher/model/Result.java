@@ -1,4 +1,4 @@
-package it.unifi.ing.pc.searcher;
+package it.unifi.ing.pc.searcher.model;
 
 public class Result {
 

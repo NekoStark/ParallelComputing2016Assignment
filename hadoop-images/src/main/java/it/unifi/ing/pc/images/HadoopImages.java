@@ -7,6 +7,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+import it.unifi.ing.pc.images.mapreduce.ImageWritable;
 import it.unifi.ing.pc.images.mapreduce.Map;
 import it.unifi.ing.pc.images.mapreduce.Reduce;
 
@@ -15,15 +16,15 @@ public class HadoopImages {
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		
-	    Job job = Job.getInstance(conf, "image search");
+	    Job job = Job.getInstance(conf, "image batch");
 	    
 	    job.setJarByClass(HadoopImages.class);
 	    
+	    job.setMapOutputKeyClass(Text.class);
+	    job.setMapOutputValueClass(ImageWritable.class);
+	    
 	    job.setMapperClass(Map.class);
 	    job.setReducerClass(Reduce.class);
-	    
-	    job.setOutputKeyClass(Text.class);
-	    job.setOutputValueClass(Text.class);
 	    
 	    if(args.length > 0 && "demo".equals( args[0] )) {
 	    	FileInputFormat.addInputPath(job, new Path( "/Users/stark/Desktop/hadoop/input/rawdata") );
@@ -34,7 +35,6 @@ public class HadoopImages {
 	    }
 	    job.waitForCompletion(true);
 	    
-//	    DatabaseOperation.writeToDb( EndpointFactory.getHfs() );
 	}
 
 }

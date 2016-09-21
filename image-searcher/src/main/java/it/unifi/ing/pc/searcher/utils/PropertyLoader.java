@@ -1,6 +1,6 @@
-package it.unifi.ing.pc.utilities;
+package it.unifi.ing.pc.searcher.utils;
 
-import static it.unifi.ing.pc.utilities.ResourceLoader.asURL;
+import static it.unifi.ing.pc.searcher.utils.ResourceLoader.asURL;
 import java.io.InputStream;
 import java.util.Properties;
 

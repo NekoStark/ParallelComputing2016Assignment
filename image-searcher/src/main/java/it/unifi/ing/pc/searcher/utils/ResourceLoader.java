@@ -1,4 +1,4 @@
-package it.unifi.ing.pc.utilities;
+package it.unifi.ing.pc.searcher.utils;
 
 import java.io.File;
 import java.net.URI;
@@ -22,7 +22,5 @@ public class ResourceLoader {
 	public static File asFile(String filePath) {
 		return new File( asURI(filePath) );
 	}
-	
-	
 	
 }

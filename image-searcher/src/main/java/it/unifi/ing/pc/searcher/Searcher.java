@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import it.unifi.ing.pc.searcher.model.Result;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

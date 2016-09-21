@@ -12,7 +12,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import it.unifi.ing.pc.utilities.PropertyLoader;
+import it.unifi.ing.pc.searcher.model.Result;
+import it.unifi.ing.pc.searcher.utils.PropertyLoader;
 import okhttp3.Request;
 
 public class FlickrSearcher extends Searcher {

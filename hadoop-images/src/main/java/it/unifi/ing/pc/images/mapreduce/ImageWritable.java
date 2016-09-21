@@ -13,6 +13,11 @@ public class ImageWritable implements Writable {
 	private Text imageUrl;
 	private LongWritable timeStamp;
 	
+	public ImageWritable() {
+		imageUrl = new Text();
+		timeStamp = new LongWritable();
+	}
+	
 	@Override
 	public void write(DataOutput out) throws IOException {
 		imageUrl.write(out);
@@ -42,6 +47,14 @@ public class ImageWritable implements Writable {
 	@Override
 	public int hashCode() {
 		return imageUrl.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof ImageWritable) {
+			return ((ImageWritable)obj).getImageUrl().equals(this.getImageUrl());
+		} 
+		return false;
 	}
 
 }

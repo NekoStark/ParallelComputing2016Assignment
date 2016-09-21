@@ -14,6 +14,8 @@ import java.util.Set;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import it.unifi.ing.pc.searcher.model.Result;
+
 //XXX
 public class ImageDownload {
 
