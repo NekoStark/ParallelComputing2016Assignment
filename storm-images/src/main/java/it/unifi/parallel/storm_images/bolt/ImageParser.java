@@ -18,13 +18,13 @@ public class ImageParser extends BaseBasicBolt {
 	@Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
 		ImageResult image = new ImageResult(tuple.getString(0));
-		collector.emit( new Values(image.getSearchKey(), image.getLink()) );
 		
 		Map<String, Object> event = new LinkedHashMap<>();
         event.put("timestamp", image.getTimestamp());
         event.put("service", image.getService());
         event.put("searchKey", image.getSearchKey());
         event.put("link", image.getLink());
+        event.put("click", 1);
         collector.emit(new Values(event));
     }
 	

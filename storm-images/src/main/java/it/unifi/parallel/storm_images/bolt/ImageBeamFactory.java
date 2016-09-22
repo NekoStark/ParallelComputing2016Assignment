@@ -28,10 +28,10 @@ import io.druid.query.aggregation.AggregatorFactory;
 import io.druid.query.aggregation.CountAggregatorFactory;
 
 public class ImageBeamFactory implements BeamFactory<Map<String, Object>> {
-	
-	private static final long serialVersionUID = 563519099197710592L;
 
-    @Override
+	private static final long serialVersionUID = -2746777814826330964L;
+
+	@Override
     public Beam<Map<String, Object>> makeBeam(Map<?, ?> conf, IMetricsContext metrics) {
 
         final String indexService = "druid/overlord";
@@ -40,7 +40,7 @@ public class ImageBeamFactory implements BeamFactory<Map<String, Object>> {
         final List<String> dimensions = ImmutableList.of("searchKey", "link");
         List<AggregatorFactory> aggregator = ImmutableList.<AggregatorFactory>of(
                 new CountAggregatorFactory(
-                        "count"
+                        "click"
                 )
         );
         
