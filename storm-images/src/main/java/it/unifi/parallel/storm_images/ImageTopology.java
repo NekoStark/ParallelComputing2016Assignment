@@ -9,7 +9,6 @@ import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.utils.Utils;
 import it.unifi.parallel.storm_images.bolt.ImageBeamFactory;
 import it.unifi.parallel.storm_images.bolt.ImageParser;
 import storm.kafka.BrokerHosts;
