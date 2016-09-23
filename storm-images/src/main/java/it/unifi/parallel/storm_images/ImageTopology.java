@@ -46,10 +46,10 @@ public class ImageTopology {
 		//LOCAL MODE
 		LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology("image-topology", config, builder.createTopology());
-		Utils.sleep(10000);
+//		Utils.sleep(10000);
 		
-		cluster.killTopology("image-topology");
-		cluster.shutdown();
+//		cluster.killTopology("image-topology");
+//		cluster.shutdown();
 		
 		//MANAGED MODE
 //		config.setNumWorkers(20);

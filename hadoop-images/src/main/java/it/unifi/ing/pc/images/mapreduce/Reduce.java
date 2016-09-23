@@ -29,7 +29,7 @@ public class Reduce extends Reducer<Text, ImageWritable, Text, Text> {
 		
 		try{
 			String dateText = Instant.ofEpochMilli(date.get()).toString();
-			context.write(new Text(dateText + "  "+ key.toString() +"  " + result.toString() + "\""+key.toString()+"\""), null);
+			context.write(new Text(dateText + "  "+ key.toString() +"  " + result.toString()), null);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -15,7 +15,7 @@ import it.unifi.ing.pc.image.publisher.message.properties.KafkaProducerPropertie
 
 public class ImagePublisher {
 
-	private static final String KAFKA_TOPIC = "test2";
+	private static final String KAFKA_TOPIC = "images";
 	private static final String[] SERVICES = {"GOOGLE", "BING", "FLICKR"};
 	private static final String INPUT_FILE_LOCATION = "/path/to/input/file";
 	private static final String OUTPUT_FILE_LOCATION = "/Users/stark/Desktop/hadoop/input/rawdata";

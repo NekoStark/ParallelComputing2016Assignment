@@ -12,16 +12,17 @@ public class RandomMessageProducerJson extends RandomMessageProducer {
 	@Override
 	public String buildRandomMessage() {
 		StringBuffer sb = new StringBuffer();
-		return sb.append("http://")
-			.append(UUID.randomUUID().toString())
-			.append(".com")
-			.append("\t")
-			.append( random(tags) )
-			.append("\t")
-			.append( random(services) )
-			.append("\t")
-			.append(Instant.now().toString())
-			.toString();
+		return sb.append("{\"url\":\"http://")
+				.append(UUID.randomUUID().toString())
+				.append(".com\"")
+				.append(",\"tag\": \"")
+				.append( random(tags) )
+				.append("\",\"service\":\"")
+				.append( random(services) )
+				.append("\",\"timestamp\" : \"")
+				.append(Instant.now().toString())
+				.append("\"}")
+				.toString();
 	}
 
 }

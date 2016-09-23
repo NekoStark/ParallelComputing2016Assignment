@@ -90,7 +90,7 @@
 			      </descriptorRefs>
 			      <archive>
 			        <manifest>
-			          <mainClass>it.unifi.ing.pc.kafka.KafkaStormSample</mainClass>
+			          <mainClass>it.unifi.parallel.storm_images.ImageTopology</mainClass>
 			        </manifest>
 			      </archive>
 			    </configuration>
